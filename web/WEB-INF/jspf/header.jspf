@@ -1,0 +1,219 @@
+<%@page import="entities.beans.UserSessionBean"%>
+<%@ page pageEncoding="UTF-8" %>
+<%
+    UserSessionBean userSession = (UserSessionBean) session.getAttribute("userSession");
+%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            <% if (response.getHeader("title") == null) {%>
+            Music Mania - Home
+            <% } else {%>
+            Music Mania - <%= response.getHeader("title")%>
+            <% }%>
+
+        </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/assets/css/style.css">
+        <link href="<%=request.getContextPath()%>/assets/css/prettify-jPlayer.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+
+        <script type="text/javascript" src="<%=request.getContextPath()%>/assets/js/libs/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/assets/js/libs/bootstrap.min.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/assets/js/script.js"></script>
+        <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqaE8N7bBpTfPrXTUPxtN3Wq4UfUfcuf4&sensor=false">
+        </script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/assets/js/libs/jquery.jplayer.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" id="header">
+                <div class="col-md-12"  id="borderControl">
+                    <div class="row" >
+                        <div class="col-md-3" id="logo">
+                            <a href="<%=request.getContextPath()%>">
+                                <h2>MusicMania</h2>
+                            </a>
+                        </div>
+                        <%
+                            if (userSession == null) {
+                        %>
+                        <form id="loginForm" action="<%=request.getContextPath()%>/login" method="POST">
+                            <div class="col-md-6 pull-right">
+                                <div class="row " id="authControls">
+                                    <div class="col-md-2" id="signUp">
+                                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#regModal">Sign Up</button>
+                                    </div>
+
+                                    <div class="col-sm-4" id="username">
+                                        <input type="text" name="username" placeholder="Username">
+                                    </div>
+                                    <div class="col-sm-4" id="password">
+                                        <input type="password" name="password" placeholder="Password">
+                                    </div>
+
+                                    <div class="col-md-2" id="login">
+                                        <button id="loginSubmit" type="button" class="btn btn-default">Login</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <% } else {%>
+                        <div class="col-md-4 pull-right">
+                            <div class="row" id="authControls">
+                                <div class="col-md-4" id="nameLabel">
+                                    <span class="label label-default" >
+                                        Logged in as <%= userSession.getUsername()%>
+                                    </span> <br/>
+                                    <span class="label label-default" >                              
+                                        Balance = £<%= userSession.getBalance() %>
+                                    </span>
+                                </div>
+                                <div class="col-md-3" id="logOut">
+                                    <a href="<%=request.getContextPath()%>/profile">
+                                        <button type="button" class="btn btn-default">Profile</button>
+                                    </a>
+                                </div>
+                                <div class="col-md-2" id="logOut">
+                                    <a href="<%=request.getContextPath()%>/cart">
+                                        <button type="button" class="btn btn-default">Cart</button>
+                                    </a>
+                                </div>
+                                <div class="col-md-2" id="logOut">
+                                    <a href="<%=request.getContextPath()%>/logout">
+                                        <button type="button" class="btn btn-default">Logout</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <% }%>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="content">
+                <div class="col-md-12"  id="borderControl">
+                    <div class="row" >
+                        <div class="col-md-3">
+                            <a href="<%=request.getContextPath()%>/getNews">
+                                <div class="navItem">
+                                    News
+                                </div>
+                            </a>
+                            <a href="<%=request.getContextPath()%>/getArtists">
+                                <div class="navItem">
+                                    Artists
+                                </div>
+                            </a>
+                            <a href="<%=request.getContextPath()%>/getBands">
+                                <div class="navItem">
+                                    Bands
+                                </div>
+                            </a>
+                            <a href="<%=request.getContextPath()%>/getEvents">
+                                <div class="navItem">
+                                    Events
+                                </div>
+                            </a>
+                            <a href="<%=request.getContextPath()%>/releases">
+                                <div class="navItem">
+                                    New Releases
+                                </div>
+                            </a>
+                            <a href="<%=request.getContextPath()%>/saleTypes">
+                                <div class="navItem">
+                                    Sales
+                                </div>
+                            </a>
+                            <% if(userSession != null && userSession.getAccess().equals("admin")) { %>
+                            <a href="<%=request.getContextPath()%>/admin/adminHome">
+                                <div class="navItem">
+                                    Admin
+                                </div>
+                            </a>
+                            <% } %>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Sign Up</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal" role="form" id="regForm" method="POST" action="reg">
+                                            <div class="form-group">
+                                                <label for="username" class="col-sm-3 control-label">Username</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password" class="col-sm-3 control-label">Password</label>
+                                                <div class="col-sm-9">
+                                                <input type="password" class="form-control" id="password" name="password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="firstName" class="col-sm-3 control-label">First Name</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="firstName" name="firstname" placeholder="Enter first name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="surname" class="col-sm-3 control-label">Surname</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="surname" name="surname" placeholder="Enter surname">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address" class="col-sm-3 control-label">Address</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="address" name="address1" placeholder="Address Line One">
+                                                <input type="text" class="form-control" id="address" name="address2" placeholder="Address Line Two">
+                                                <input type="text" class="form-control" id="address" name="address3" placeholder="Address Line Three">
+                                                <input type="text" class="form-control" id="address" name="address4" placeholder="Address Line Four">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="postCode" class="col-sm-3 control-label">Post Code</label>
+                                                <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="postCode" name="postCode" placeholder="Enter post code">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phone" class="col-sm-3 control-label">Phone Number</label>
+                                                <div class="col-sm-9">
+                                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone number">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class="col-sm-3 control-label">Email</label>
+                                                <div class="col-sm-9">
+                                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="dob" class="col-sm-3 control-label">Date of Birth</label>
+                                                <div class="col-sm-9">
+                                                <input type="date" class="form-control" id="dob" name="dob" placeholder="19-11-1985">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" id="regSubmit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>

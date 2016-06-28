@@ -1,0 +1,41 @@
+</div>
+</div>
+</div>
+<div class="container" id="footer">
+    
+</div>
+</body>
+<script>
+    var loginError = "<%=response.getHeader("loginError")%>";
+    if(loginError !== "null") {
+        alert(loginError);
+    }
+    
+    var dbError = "<%=response.getHeader("dbError")%>";
+    if(dbError !== "null") {
+        alert(dbError);
+    }
+    
+    var cartMessage = "<%=response.getHeader("cartMessage")%>";
+    if(cartMessage !== "null") {
+        alert(cartMessage);
+    }
+    
+    var regMessage = "<%=response.getHeader("regMessage")%>";
+    if(regMessage !== "null") {
+        alert(regMessage);
+    }
+    
+    var profileMessage = "<%=response.getHeader("profileMessage")%>";
+    if(profileMessage !== "null") {
+        alert(profileMessage);
+    }
+    
+    var adminMessage = "<%=response.getHeader("adminMessage")%>";
+    if(adminMessage !== "null") {
+        alert(adminMessage);
+    }
+</script>
+</html>
+
+
